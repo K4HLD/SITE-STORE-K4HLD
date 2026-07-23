@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K4HLD STORE</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      color: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #0a0a0a, #1e1e1e);
+      color: #fff;
+      padding: 2.5rem 1rem 2rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+      animation: headerGlow 8s infinite alternate;
+    }
+    @keyframes headerGlow {
+      0% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+    .header h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      background: linear-gradient(180deg, #d4af37, #f9e076, #aa7c11);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+      margin-bottom: 0.5rem;
+    }
+    .header .subtitle {
+      font-size: 1.1rem;
+      color: #ccc;
+      position: relative;
+      z-index: 1;
+      font-style: italic;
+      max-width: 500px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+    .header .subtitle span {
+      color: #d4af37;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem 1rem 2rem;
+      flex: 1;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+      transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #f0f0f0;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+      border-color: #d4af37;
+    }
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      background-color: #e9ecef;
+      transition: transform 0.4s ease;
+    }
+    .card:hover img {
+      transform: scale(1.04);
+    }
+    .card-content {
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .card-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #1a1a1a;
+      line-height: 1.4;
+    }
+    .card-desc {
+      font-size: 0.93rem;
+      color: #666;
+      margin-bottom: 1.2rem;
+      flex-grow: 1;
+      line-height: 1.7;
+    }
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.4rem;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 1rem;
+    }
+    .price {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0a0a0a;
+      letter-spacing: 0.5px;
+    }
+    .whatsapp-btn {
+      background-color: #25D366;
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.3rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.25);
+    }
+    .whatsapp-btn:hover {
+      background-color: #1da851;
+      box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4);
+      transform: scale(1.03);
+    }
+
+    .floating-whatsapp {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background-color: #25D366;
+      color: #fff;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+      z-index: 999;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      animation: floatPulse 2.2s infinite;
+    }
+    .floating-whatsapp:hover {
+      background-color: #1da851;
+      transform: scale(1.1);
+      box-shadow: 0 12px 30px rgba(37, 211, 102, 0.55);
+    }
+    @keyframes floatPulse {
+      0% { box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); }
+      50% { box-shadow: 0 8px 40px rgba(37, 211, 102, 0.7); }
+      100% { box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4); }
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1.8rem 1rem;
+      color: #777;
+      font-size: 0.95rem;
+      background-color: #fff;
+      border-top: 1px solid #eee;
+      line-height: 1.8;
+    }
+    .footer-note .brand {
+      color: #d4af37;
+      font-weight: 700;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 4rem;
+      color: #999;
+      font-size: 1.1rem;
+    }
+
+    @media (max-width: 600px) {
+      .header h1 {
+        font-size: 2rem;
+        letter-spacing: 2px;
+      }
+      .header .subtitle {
+        font-size: 0.95rem;
+      }
+      .products-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+      }
+      .floating-whatsapp {
+        width: 54px;
+        height: 54px;
+        font-size: 1.7rem;
+        bottom: 18px;
+        right: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>K4HLD STORE</h1>
+    <p class="subtitle">
+      ✨ حيث <span>الأناقة</span> تلتقي <span>بالجودة</span> ✨<br>
+      اكتشف مجموعتنا المميزة من المنتقات العصرية التي تعكس ذوقك الرفيع
+    </p>
+  </header>
+
+  <main class="container">
+    <div class="loading" id="loading">🔄 جاري تحميل المنتجات...</div>
+    <div class="products-grid" id="productsContainer" style="display:none;"></div>
+  </main>
+
+  <footer class="footer-note">
+    <span class="brand">K4HLD STORE</span> — قد يتم خفض بعض الأسعار، تواصل معنا على واتساب لمزيد من المعلومات
+  </footer>
+
+  <a href="https://wa.me/212770306095?text=مرحباً K4HLD STORE، أريد الاستفسار عن أحد المنتجات" 
+     class="floating-whatsapp" 
+     target="_blank" 
+     rel="noopener" 
+     aria-label="تواصل عبر واتساب"
+     title="تواصل معنا على واتساب">
+    💬
+  </a>
+
+  <script>
+    // ==========================================
+    // الإعدادات - عدل هنا فقط
+    // ==========================================
+    const SPREADSHEET_ID = '17K0V11uG3kzNpwXo7VNZlsVSp8saoOwSeAa5IzRqBMU';
+    const SHEET_NAME = 'Sheet1'; // غير الاسم إذا كان اسم الورقة مختلفاً
+    const PHONE_NUMBER = '212770306095';
+    const CURRENCY = 'DH';
+
+    // بناء الرابط الجديد
+    const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
+
+    // دالة تحويل CSV إلى مصفوفة كائنات
+    function csvToArray(csv) {
+      const lines = csv.trim().split('\n');
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+      const result = [];
+      for (let i = 1; i < lines.length; i++) {
+        const currentline = lines[i].split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = currentline[index] || '';
+        });
+        if (obj.title && obj.title.trim() !== '') {
+          result.push(obj);
+        }
+      }
+      return result;
+    }
+
+    // دالة بناء وعرض البطاقات
+    function renderProducts(products) {
+      const container = document.getElementById('productsContainer');
+      const loading = document.getElementById('loading');
+      
+      loading.style.display = 'none';
+      container.style.display = 'grid';
+      container.innerHTML = '';
+
+      if (products.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column:1/-1;text-align:center;padding:3rem;color:#999;">
+            🛍️ لا توجد منتجات حالياً. ترقبوا جديدنا قريباً!
+          </div>`;
+        return;
+      }
+
+      products.forEach(product => {
+        const message = product.whatsapp_message || 
+                        `مرحباً K4HLD STORE، أريد الاستفسار عن: ${product.title}`;
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappLink = `https://wa.me/${PHONE_NUMBER}?text=${encodedMessage}`;
+        const imageSrc = product.image || 'https://via.placeholder.com/400x300/1a1a1a/d4af37?text=K4HLD+STORE';
+
+        const cardHTML = `
+          <article class="card">
+            <img src="${imageSrc}" 
+                 alt="${product.title}" 
+                 loading="lazy" 
+                 onerror="this.src='https://via.placeholder.com/400x300/1a1a1a/d4af37?text=${encodeURIComponent(product.title || 'K4HLD STORE')}'">
+            <div class="card-content">
+              <h3 class="card-title">${product.title}</h3>
+              <p class="card-desc">${product.description}</p>
+              <div class="card-footer">
+                <span class="price">${product.price} ${CURRENCY}</span>
+                <a href="${whatsappLink}" target="_blank" rel="noopener" class="whatsapp-btn">
+                  📞 واتساب
+                </a>
+              </div>
+            </div>
+          </article>
+        `;
+        container.innerHTML += cardHTML;
+      });
+    }
+
+    // جلب البيانات
+    fetch(SHEET_CSV_URL)
+      .then(response => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.text();
+      })
+      .then(csvText => {
+        const products = csvToArray(csvText);
+        renderProducts(products);
+      })
+      .catch(error => {
+        document.getElementById('loading').innerHTML = 
+          '⚠️ تعذر تحميل المنتجات حالياً. تأكد أن الملف عام (أي شخص لديه الرابط يمكنه العرض).';
+        console.error('Fetch error:', error);
+      });
+  </script>
+
+</body>
+</html>
