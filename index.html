@@ -40,22 +40,24 @@
       100% { transform: scale(1.1); opacity: 1; }
     }
     .header h1 {
-  font-size: 3.2rem;
-  font-weight: 900;
-  letter-spacing: 8px;
-  text-transform: uppercase;
-  color: #fff;
-  text-shadow:
-    0 0 7px #fff,
-    0 0 10px #fff,
-    0 0 21px #fff,
-    0 0 42px #d4af37,
-    0 0 82px #d4af37,
-    0 0 92px #d4af37;
-  position: relative;
-  z-index: 1;
-  margin-bottom: 0.5rem;
-}
+      font-size: 3.2rem;
+      font-weight: 900;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      background: linear-gradient(180deg, #f9d423, #e2b013, #b8860b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 6px rgba(212, 175, 55, 0.6));
+      position: relative;
+      z-index: 1;
+      margin-bottom: 0.5rem;
+      animation: goldShine 3s infinite alternate;
+    }
+    @keyframes goldShine {
+      0% { filter: drop-shadow(0 2px 6px rgba(212, 175, 55, 0.4)); }
+      100% { filter: drop-shadow(0 2px 14px rgba(255, 215, 0, 0.9)); }
+    }
     .header .subtitle {
       font-size: 1.1rem;
       color: #ccc;
@@ -80,7 +82,7 @@
 
     .products-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.8rem;
     }
 
@@ -105,6 +107,7 @@
       object-fit: cover;
       background-color: #e9ecef;
       transition: transform 0.4s ease;
+      cursor: pointer;
     }
     .card:hover img {
       transform: scale(1.04);
@@ -165,6 +168,48 @@
       transform: scale(1.03);
     }
 
+    /* نافذة الصورة المنبثقة */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 95%;
+      max-height: 85vh;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      color: #fff;
+      font-size: 2.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10000;
+      transition: 0.2s;
+      background: none;
+      border: none;
+    }
+    .lightbox-close:hover {
+      color: #d4af37;
+      transform: scale(1.2);
+    }
+
     .floating-whatsapp {
       position: fixed;
       bottom: 28px;
@@ -179,7 +224,7 @@
       justify-content: center;
       font-size: 2rem;
       box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-      z-index: 999;
+      z-index: 998;
       text-decoration: none;
       transition: all 0.3s ease;
       animation: floatPulse 2.2s infinite;
@@ -220,14 +265,30 @@
     @media (max-width: 600px) {
       .header h1 {
         font-size: 2rem;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
       }
       .header .subtitle {
         font-size: 0.95rem;
       }
       .products-grid {
         grid-template-columns: 1fr;
-        gap: 1.2rem;
+        gap: 1.5rem;
+        padding: 0 0.2rem;
+      }
+      .card img {
+        height: 280px;
+      }
+      .card-content {
+        padding: 1.5rem;
+      }
+      .card-title {
+        font-size: 1.4rem;
+      }
+      .card-desc {
+        font-size: 1rem;
+      }
+      .price {
+        font-size: 1.6rem;
       }
       .floating-whatsapp {
         width: 54px;
@@ -258,6 +319,7 @@
     <span class="brand">K4HLD STORE</span> — قد يتم خفض بعض الأسعار، تواصل معنا على واتساب لمزيد من المعلومات
   </footer>
 
+  <!-- زر واتساب العائم -->
   <a href="https://wa.me/212770306095?text=مرحباً K4HLD STORE، أريد الاستفسار عن أحد المنتجات" 
      class="floating-whatsapp" 
      target="_blank" 
@@ -267,19 +329,23 @@
     💬
   </a>
 
+  <!-- نافذة الصورة المنبثقة -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <img src="" alt="صورة المنتج" id="lightboxImg">
+  </div>
+
   <script>
     // ==========================================
-    // الإعدادات - عدل هنا فقط
+    // الإعدادات
     // ==========================================
     const SPREADSHEET_ID = '17K0V11uG3kzNpwXo7VNZlsVSp8saoOwSeAa5IzRqBMU';
-    const SHEET_NAME = 'Sheet1'; // غير الاسم إذا كان اسم الورقة مختلفاً
+    const SHEET_NAME = 'Sheet1';
     const PHONE_NUMBER = '212770306095';
     const CURRENCY = 'DH';
 
-    // بناء الرابط الجديد
     const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:csv&sheet=${SHEET_NAME}`;
 
-    // دالة تحويل CSV إلى مصفوفة كائنات
     function csvToArray(csv) {
       const lines = csv.trim().split('\n');
       if (lines.length < 2) return [];
@@ -298,7 +364,6 @@
       return result;
     }
 
-    // دالة بناء وعرض البطاقات
     function renderProducts(products) {
       const container = document.getElementById('productsContainer');
       const loading = document.getElementById('loading');
@@ -326,6 +391,7 @@
           <article class="card">
             <img src="${imageSrc}" 
                  alt="${product.title}" 
+                 class="card-img"
                  loading="lazy" 
                  onerror="this.src='https://via.placeholder.com/400x300/1a1a1a/d4af37?text=${encodeURIComponent(product.title || 'K4HLD STORE')}'">
             <div class="card-content">
@@ -359,6 +425,28 @@
           '⚠️ تعذر تحميل المنتجات حالياً. تأكد أن الملف عام (أي شخص لديه الرابط يمكنه العرض).';
         console.error('Fetch error:', error);
       });
+
+    // lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('card-img')) {
+        lightboxImg.src = e.target.src;
+        lightbox.classList.add('active');
+      }
+    });
+
+    lightboxClose.addEventListener('click', function() {
+      lightbox.classList.remove('active');
+    });
+
+    lightbox.addEventListener('click', function(e) {
+      if (e.target === lightbox) {
+        lightbox.classList.remove('active');
+      }
+    });
   </script>
 
 </body>
